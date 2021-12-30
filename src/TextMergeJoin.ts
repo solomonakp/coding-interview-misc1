@@ -10,22 +10,23 @@
  *
  * The test data has examples of what these partial regions would look like.
  */
+
 export namespace TextMergeJoin {
+  export interface IPDFTextWord {
+    readonly pageNum: number;
+    readonly x: number;
+    readonly y: number;
+    readonly width: number;
+    readonly height: number;
+    readonly str: string;
+  }
 
-    export interface IPDFTextWord {
-        readonly pageNum: number;
-        readonly x: number;
-        readonly y: number;
-        readonly width: number;
-        readonly height: number;
-        readonly str: string;
-    }
-
-    /**
-     *
-     */
-    export function doMergeWords(data: ReadonlyArray<IPDFTextWord>): ReadonlyArray<IPDFTextWord> {
-        return [];
-    }
-
+  /**
+   *
+   */
+  export function doMergeWords(
+    data: ReadonlyArray<IPDFTextWord>
+  ): ReadonlyArray<IPDFTextWord> {
+    return data;
+  }
 }

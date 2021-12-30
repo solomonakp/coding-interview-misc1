@@ -12,22 +12,40 @@
  * The ordering of the push operations must be kept.
  */
 export class RingBuffer<T> {
+  maxSize: number;
 
-    constructor(capacity: number) {
+  list: any[];
+
+  constructor(capacity: number) {
+    this.maxSize = capacity;
+    this.list = [];
+  }
+
+  public push(value: T) {
+    // check if list is full
+
+    if (this.list.length < this.maxSize) {
+      this.list.push(value);
+    } else {
+      if (this.list.length === this.maxSize) {
+        this.list.shift();
+        this.list.push(value);
+      }
     }
 
-    public push(value: T) {
+    //   if list is full remove last from list
+    // add current value to list
+  }
 
-    }
+  public peek(): T | undefined {
+    const value = this.list[this.list.length - 1];
 
-    public peek(): T | undefined {
-        // not implemented
-        return undefined;
-    }
+    return value;
+  }
 
-    public pop(): T | undefined {
-        // not implemented
-        return undefined;
-    }
-
+  public pop(): T | undefined {
+    const value = this.list.pop();
+    // not implemented
+    return value;
+  }
 }

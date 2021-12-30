@@ -31,14 +31,37 @@ import React from 'react';
 type SetLocalStorage<V> = (newValue: V) => void;
 type UseLocalStorageStateTuple<V> = readonly [V, SetLocalStorage<V>];
 
-export function useLocalStorageState<V extends string>(key: string, initialValue: V): UseLocalStorageStateTuple<V> {
+export function useLocalStorageState<V extends string>(
+  key: string,
+  initialValue: V
+): UseLocalStorageStateTuple<V> {
+  // TODO: implement this code
 
-    // TODO: implement this code
+  const [storedValue, setStoredValue] = React.useState(() => {
+    //    used try block incase of SSR
+    try {
+      const value = window.localStorage.getItem(key);
 
-    const setter = React.useCallback((newValue: V) => {
-        // noop
-    }, [])
+      if (value) {
+        return JSON.parse(value);
+      } else {
+        window.localStorage.setItem(key, JSON.stringify(initialValue));
+        return initialValue;
+      }
+    } catch (err) {
+      return initialValue;
+    }
+  });
 
-    return [initialValue, setter];
+  const setter = React.useCallback((newValue: V) => {
+    // noop
+    try {
+      window.localStorage.setItem(key, JSON.stringify(newValue));
+    } catch (err) {
+      console.log(err);
+    }
+    setStoredValue(newValue);
+  }, []);
 
+  return [storedValue, setter];
 }
