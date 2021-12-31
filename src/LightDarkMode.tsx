@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React from 'react';
+import { useMode, useModeToggler, Provider } from './Context';
 /**
  *
  * Build a simple app that allows the user to toggle light and dark mode as a react hook.
@@ -14,15 +14,33 @@ import React, { useState } from 'react';
  * app, then a hook that can be used to change the theme.
  *
  */
-export const App = () => {
-  return <Main />;
-};
 
 export type Theme = 'light' | 'dark';
 
 export type UseThemeToggler = (theme: Theme) => void;
 
 export type UseTheme = () => Theme;
+
+export const Settings = () => {
+  const mode = useMode();
+
+  const toggle = useModeToggler();
+
+  const styles = {
+    backgroundColor: mode === 'light' ? 'white' : 'black',
+    color: mode === 'light' ? 'black' : 'white',
+  };
+
+  const toggleMode = React.useCallback(() => {
+    toggle(mode);
+  }, [toggle, mode]);
+
+  return (
+    <button onClick={toggleMode} style={styles}>
+      toggle {mode === 'light' ? 'dark' : 'light'}
+    </button>
+  );
+};
 
 export const Main = () => {
   return (
@@ -32,33 +50,12 @@ export const Main = () => {
   );
 };
 
-export const Settings = () => {
-  const { mode } = UseMode();
-
-  const toggleMode = UseModeToggler(mode);
-
-  return <button onClick={toggleMode}>toggle light/dark mode</button>;
+const App = () => {
+  return (
+    <Provider>
+      <Main />
+    </Provider>
+  );
 };
 
-const UseMode = () => {
-  const [mode, setMode] = useState<Theme>('light');
-
-  return {
-    mode,
-    setMode,
-  };
-};
-
-const UseModeToggler = (theme: Theme) => {
-  const { setMode } = UseMode();
-
-  const toggleMode = () => {
-    if (theme === 'dark') {
-      setMode('light');
-    } else {
-      setMode('dark');
-    }
-  };
-
-  return toggleMode;
-};
+export default App;
